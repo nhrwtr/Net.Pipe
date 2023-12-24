@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NamedPipe", "NamedPipe\NamedPipe.csproj", "{9AD1DB53-5C01-4133-86C7-7A5E6265AEAD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Net.Pipe.Test", "Net.Pipe.Test\Net.Pipe.Test.csproj", "{29211DFF-40A9-4210-8377-282F9E799F89}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9AD1DB53-5C01-4133-86C7-7A5E6265AEAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AD1DB53-5C01-4133-86C7-7A5E6265AEAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AD1DB53-5C01-4133-86C7-7A5E6265AEAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AD1DB53-5C01-4133-86C7-7A5E6265AEAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29211DFF-40A9-4210-8377-282F9E799F89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29211DFF-40A9-4210-8377-282F9E799F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29211DFF-40A9-4210-8377-282F9E799F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29211DFF-40A9-4210-8377-282F9E799F89}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7677BA6-E04D-4460-9BA0-F3B302B273E9}
+	EndGlobalSection
+EndGlobal
