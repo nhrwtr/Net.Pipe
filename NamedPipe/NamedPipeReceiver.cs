@@ -40,7 +40,7 @@ namespace NamedPipe
                     using (NamedPipeServerStream server = new(pipeName, PipeDirection.InOut, RecvPipeMax,
                         PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly))
                     {
-                        Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: wait connection... ");
+                        Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: pipe connection waiting... ");
                         await server.WaitForConnectionAsync(combinedCts.Token);
 
                         Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: sender <=> receiver ");
@@ -60,7 +60,7 @@ namespace NamedPipe
                 catch (IOException ioe)
                 {
                     // クライアントが切断
-                    Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: client disconnected!");
+                    Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: client already disconnected!");
                     reject(ioe);
                 }
                 catch (OperationCanceledException oce)
@@ -75,7 +75,7 @@ namespace NamedPipe
                 }
                 finally
                 {
-                    Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: server closing.");
+                    Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: pipe stop.");
                 }
             });
         }

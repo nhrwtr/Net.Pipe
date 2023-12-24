@@ -72,20 +72,31 @@ namespace Common.Test
             CancellationTokenSource _cancelServer = new();
             CancellationTokenSource _cancelClient = new();
 
-            using (NamedPipeService pipe = new())
+            // Server
+            await Task.Run(async () =>
             {
+                Console.WriteLine($"Server[{Environment.CurrentManagedThreadId}]: test start");
+                using NamedPipeService pipe = new();
                 pipe.Received += UnitTest_Recieved;
                 _ = pipe.LaunchAsync(pipeName, _cancelServer.Token);
+            }, _cancelServer.Token);
 
+            // Client
+            await Task.Run(async () =>
+            {
+                Console.WriteLine($"Client[{Environment.CurrentManagedThreadId}]: test start");
                 using NamedPipeClient client = new();
                 await client.SendAsync(pipeName, sendMsg);
+            }, _cancelClient.Token);
 
-                await Task.Delay(2000);
+            await Task.Delay(4000);
 
-                Console.WriteLine($"{sendMsg}, {(_receivedMessage == "" ? "[null]" : _receivedMessage)}");
-                Assert.True(sendMsg == _receivedMessage, $"{sendMsg}, {(_receivedMessage == "" ? "[null]" : _receivedMessage)}");
-            }
+            Console.WriteLine($"{sendMsg}, {(_receivedMessage == "" ? "[null]" : _receivedMessage)}");
+            Assert.True(sendMsg == _receivedMessage, $"{sendMsg}, {(_receivedMessage == "" ? "[null]" : _receivedMessage)}");
+
+            _cancelServer.Cancel();
         }
+
 
         private string _receivedMessage = "";
         private void UnitTest_Recieved(string sendMsg)
@@ -126,7 +137,7 @@ namespace Common.Test
                 catch (OperationCanceledException ex)
                 {
                     Console.WriteLine(ex.Message);
-                    Assert.True(true == recvTask.IsCanceled);
+                    Assert.True(recvTask.IsCanceled);
                 }
             }
         }

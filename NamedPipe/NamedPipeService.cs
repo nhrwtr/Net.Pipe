@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO.Pipes;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace NamedPipe
 {
     public class NamedPipeService : IDisposable
     {
-        private bool disposedValue;
+        private bool _disposedValue;
+        private ConcurrentBag<Task> _tasks = [];
 
         /// <summary>
         /// 名前付きパイプを送受信するサーバーを作成する
@@ -27,7 +29,7 @@ namespace NamedPipe
         /// <returns></returns>
         public Task LaunchAsync(string pipeName, CancellationToken ct = default)
         {
-            Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: start");
+            Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: server start");
             return Task.Run(async () =>
             {
                 while (true)
@@ -35,23 +37,37 @@ namespace NamedPipe
                     using NamedPipeReceiver receiver = new();
                     string? message = await receiver.LaunchAsync(pipeName, ct);
 
-                    Console.WriteLine($"received[{Environment.CurrentManagedThreadId}]: message received.");
-                    Received(message ?? "");
+                    _tasks.Add(ReceivedAction(message));
 
-                    Console.WriteLine($"received[{Environment.CurrentManagedThreadId}]: restart.");
+                    Console.WriteLine($"receiver[{Environment.CurrentManagedThreadId}]: reopen.");
                 }
             }, ct);
         }
 
+        private async Task ReceivedAction(string? message)
+        {
+            Console.WriteLine($"received proc[{Environment.CurrentManagedThreadId}]: enter.");
+            await Task.Delay(3000);
+            Received(message ?? "");
+            Console.WriteLine($"received proc[{Environment.CurrentManagedThreadId}]: exit.");
+        }
+
+        public async Task WaitAllTask()
+        {
+            Console.WriteLine($"{_tasks.Count}");
+            await Task.WhenAll( _tasks );
+            _tasks.Clear();
+        }
+
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
                     // マネージド状態を破棄します (マネージド オブジェクト)
                 }
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 
